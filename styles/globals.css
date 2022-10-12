@@ -20,7 +20,7 @@
   }
 
   .icon {
-    @apply w-6 h-6 cursor-pointer;
+    @apply w-6 h-6 cursor-pointer transition-all hover:scale-110;
   }
 
   .bannerButton {

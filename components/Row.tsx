@@ -37,12 +37,12 @@ const Row = ({ title, movies }: Props) => {
       </h2>
 
       <div className="relative group">
-        <button type="button" className={`${!isMoved && "hidden"}`}>
-          <BsChevronLeft
-            className="absolute top-1/4 bg-[#dc2626] p-2 rounded-full left-2 z-40 m-auto w-8 h-8 opacity-0 transition hover:scale-125 active:scale-100 group-hover:opacity-100"
-            onClick={() => handleMove("left")}
-          />
-        </button>
+        <BsChevronLeft
+          className={`absolute top-1/4 bg-[#dc2626] p-2 rounded-full left-2 z-40 m-auto w-8 h-8 opacity-0 transition hover:scale-125 active:scale-100 group-hover:opacity-100 cursor-pointer ${
+            !isMoved && "hidden"
+          }`}
+          onClick={() => handleMove("left")}
+        />
 
         <div
           ref={rowRef}
@@ -53,12 +53,10 @@ const Row = ({ title, movies }: Props) => {
           ))}
         </div>
 
-        <button type="button">
-          <BsChevronRight
-            className="absolute top-1/4 bg-[#dc2626] p-2 rounded-full right-2 z-40 m-auto w-8 h-8 opacity-0 transition hover:scale-125 active:scale-100 group-hover:opacity-100"
-            onClick={() => handleMove("right")}
-          />
-        </button>
+        <BsChevronRight
+          className="absolute top-1/4 bg-[#dc2626] p-2 rounded-full right-10 z-40 m-auto w-8 h-8 opacity-0 transition hover:scale-125 active:scale-100 group-hover:opacity-100 cursor-pointer"
+          onClick={() => handleMove("right")}
+        />
       </div>
     </div>
   );
