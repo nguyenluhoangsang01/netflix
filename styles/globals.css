@@ -32,7 +32,7 @@
   }
 
   .alertError {
-    @apply text-[#e50914] cursor-text p-1 text-[13px] font-light;
+    @apply text-[#e50914] cursor-text p-1 text-[13px];
   }
 
   .inputError {
