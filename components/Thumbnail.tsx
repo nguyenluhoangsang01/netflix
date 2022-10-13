@@ -9,15 +9,13 @@ interface Props {
 }
 
 const Thumbnail = ({ movie }: Props) => {
+  const title =
+    movie.title || movie.original_title
+      ? movie.title || movie.original_title
+      : "*Movie title has not been updated yet";
+
   return (
-    <div
-      className="flex flex-col"
-      title={
-        movie.title || movie.original_title
-          ? movie.title || movie.original_title
-          : "*Movie title has not been updated yet"
-      }
-    >
+    <div className="flex flex-col" title={title}>
       <div className="relative h-28 min-w-[180px] transition duration-200 ease-out md:h-36 md:min-w-[260px] md:hover:scale-105">
         <Link
           href={`movies/${
@@ -32,21 +30,14 @@ const Thumbnail = ({ movie }: Props) => {
               layout="fill"
               alt={movie.title || movie.original_title}
               className="rounded-sm object-cover md:rounded"
+              loading="lazy"
+              unoptimized
             />
           </a>
         </Link>
       </div>
-      <h6
-        className="line-clamp-1 mt-1"
-        title={
-          movie.title || movie.original_title
-            ? movie.title || movie.original_title
-            : "*Movie title has not been updated yet"
-        }
-      >
-        {movie.title || movie.original_title
-          ? movie.title || movie.original_title
-          : "*Movie title has not been updated yet"}
+      <h6 className="line-clamp-1 mt-1" title={title}>
+        {title}
       </h6>
     </div>
   );

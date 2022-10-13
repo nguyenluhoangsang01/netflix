@@ -5,7 +5,7 @@
 /** html, body, heading */
 @layer base {
   body {
-    @apply bg-[#141414] text-white overflow-x-hidden !scrollbar-track-transparent !scrollbar-thumb-red-600 !scrollbar-thin;
+    @apply bg-[#141414] text-white overflow-x-hidden !scrollbar-track-transparent !scrollbar-thumb-[#e50914] !scrollbar-thin;
   }
 
   header {
@@ -25,5 +25,17 @@
 
   .bannerButton {
     @apply flex items-center gap-x-2 rounded px-5 py-1.5 text-sm font-semibold transition hover:opacity-75 md:py-2.5 md:px-8 md:text-xl;
+  }
+
+  .input {
+    @apply w-full rounded bg-[#333] px-5 py-3.5 placeholder-[gray] outline-none focus:bg-[#454545];
+  }
+
+  .alertError {
+    @apply text-[#e50914] cursor-text p-1 text-[13px] font-light;
+  }
+
+  .inputError {
+    @apply border-[#e50914] border-2;
   }
 }
