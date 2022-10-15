@@ -7,7 +7,7 @@ type InputProps = React.DetailedHTMLProps<
 >;
 
 const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
-  const [isShowPassword, setIsShowPassword] = useState<Boolean>(true);
+  const [isShowPassword, setIsShowPassword] = useState<Boolean>(false);
   const [isHover, setIsHover] = useState<Boolean>(false);
 
   const { type } = props;
