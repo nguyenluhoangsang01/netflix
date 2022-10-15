@@ -21,7 +21,7 @@ const Login = () => {
 
   const email = register("email", {
     required: true,
-    pattern: /^\S+@\S+$/i,
+    pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
   });
   const password = register("password", {
     required: true,
