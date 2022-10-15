@@ -4,7 +4,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { FiLoader } from "react-icons/fi";
 import Helmet from "../components/Helmet";
 import Input from "../components/Input";
-import Password from "../components/Password";
 import debounce from "../hooks/useDebounce";
 
 interface FormValues {
@@ -74,7 +73,8 @@ const Login = () => {
               : errors.email?.type === "pattern" && "Email is invalid"}
           </span>
 
-          <Password
+          <Input
+            type="password"
             {...password}
             placeholder="Password"
             className={`input ${errors.password ? "inputError" : ""}`}
@@ -92,9 +92,7 @@ const Login = () => {
         >
           <div className="flex items-center justify-center space-x-2">
             <span>Sign In</span>
-            {isSubmitting && (
-              <FiLoader className="animate-spin text-2xl" />
-            )}
+            {isSubmitting && <FiLoader className="animate-spin text-2xl" />}
           </div>
         </button>
 
