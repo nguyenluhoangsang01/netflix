@@ -1,26 +1,73 @@
 import {
   createUserWithEmailAndPassword,
+  onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   User,
 } from "firebase/auth";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import Loading from "../components/Loading";
 import { auth } from "../firebase";
 
-const useAuth = () => {
-  const [loading, setLoading] = useState<Boolean>(true);
-  const [user, setUser] = useState<User | null>(null);
+interface IAuth {
+  user: User | null;
+  loading: Boolean;
+  error: String | null;
+  signUp: (email: string, password: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
+  reset: (email: string) => Promise<void>;
+  logout: () => Promise<void>;
+}
+
+interface AuthProviderProps {
+  children: React.ReactNode;
+}
+
+const AuthContext = createContext<IAuth>({
+  user: null,
+  loading: true,
+  error: null,
+  signUp: async () => {},
+  signIn: async () => {},
+  reset: async () => {},
+  logout: async () => {},
+});
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<Boolean>(true);
+  const [error, setError] = useState<String | null>(null);
+  const [initialLoading, setInitialLoading] = useState<Boolean>(true);
+
+  // Persist user session
+  useEffect(
+    () =>
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setUser(user);
+
+          setLoading(false);
+        } else {
+          setUser(null);
+
+          router.push("/login");
+
+          setLoading(false);
+        }
+
+        setInitialLoading(false);
+      }),
+    [auth]
+  );
 
   const signUp = async (email: string, password: string) => {
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         setUser(user);
-
-        router.push("/login");
 
         setLoading(false);
       })
@@ -70,8 +117,8 @@ const useAuth = () => {
       .finally(() => setLoading(false));
   };
 
-  const logout = () => {
-    signOut(auth)
+  const logout = async () => {
+    await signOut(auth)
       .then(() => {
         setUser(null);
 
@@ -88,7 +135,28 @@ const useAuth = () => {
       .finally(() => setLoading(false));
   };
 
-  return { loading, user, signUp, signIn, reset, logout };
+  const memoedValue = useMemo(
+    () => ({
+      user,
+      loading,
+      error,
+      signUp,
+      signIn,
+      reset,
+      logout,
+    }),
+    [user, loading, error]
+  );
+
+  return (
+    <AuthContext.Provider value={memoedValue}>
+      {initialLoading ? <Loading /> : children}
+    </AuthContext.Provider>
+  );
+};
+
+const useAuth = () => {
+  return useContext(AuthContext);
 };
 
 export default useAuth;

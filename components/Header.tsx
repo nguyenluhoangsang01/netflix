@@ -4,8 +4,10 @@ import React from "react";
 import { AiOutlineSearch, AiFillBell } from "react-icons/ai";
 import { RiAccountCircleFill } from "react-icons/ri";
 import { useState, useEffect } from "react";
+import useAuth from "../hooks/useAuth";
 
 const Header = () => {
+  const { logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -78,6 +80,13 @@ const Header = () => {
             <RiAccountCircleFill className="icon" />
           </a>
         </Link>
+
+        <button
+          className="hidden px-4 py-2 text-white bg-[#e50914] rounded-md md:inline"
+          onClick={logout}
+        >
+          Logout
+        </button>
       </div>
     </header>
   );

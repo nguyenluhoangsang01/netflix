@@ -1,9 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FiLoader } from "react-icons/fi";
 import Helmet from "../components/Helmet";
 import Input from "../components/Input";
+import Loading from "../components/Loading";
+import useAuth from "../hooks/useAuth";
 import debounce from "../hooks/useDebounce";
 
 interface FormValues {
@@ -12,12 +15,22 @@ interface FormValues {
 }
 
 const Login = () => {
+  const { loading, signIn, signUp } = useAuth();
+  const [isLogin, setIsLogin] = useState<Boolean>(true);
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isDirty, isValid },
   } = useForm<FormValues>({ mode: "onChange" });
-  const onSubmit: SubmitHandler<FormValues> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<FormValues> = async ({ email, password }) => {
+    if (isLogin) {
+      await signIn(email, password);
+    } else {
+      await signUp(email, password);
+      setIsLogin(true);
+    }
+  };
 
   const email = register("email", {
     required: true,
@@ -25,7 +38,10 @@ const Login = () => {
   });
   const password = register("password", {
     required: true,
+    minLength: 6,
   });
+
+  if (loading) return <Loading />;
 
   return (
     <div className="relative flex w-screen h-screen flex-col bg-black md:items-center md:justify-center md:bg-transparent">
@@ -57,7 +73,9 @@ const Login = () => {
         className="relative mt-24 space-y-8 rounded bg-black/75 py-10 px-6 md:mt-0 md:max-w-md md:px-14 select-none"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <h1 className="text-4xl font-semibold">Sign In</h1>
+        <h1 className="text-4xl font-semibold cursor-text">
+          {isLogin ? "Sign In" : "Sign Up"}
+        </h1>
 
         <div className="space-y-4">
           <Input
@@ -81,7 +99,10 @@ const Login = () => {
             onChange={debounce(password.onChange)}
           />
           <span role="alert" className="alertError">
-            {errors.password?.type === "required" && "Password is required"}
+            {errors.password?.type === "required"
+              ? "Password is required"
+              : errors.password?.type === "minLength" &&
+                "Password must be at least 6 characters"}
           </span>
         </div>
 
@@ -91,19 +112,34 @@ const Login = () => {
           disabled={!isDirty || !isValid}
         >
           <div className="flex items-center justify-center space-x-2">
-            <span>Sign In</span>
+            <span>{isLogin ? "Sign In" : "Sign Up"}</span>
             {isSubmitting && <FiLoader className="animate-spin text-2xl" />}
           </div>
         </button>
 
-        <div>
-          <span className="text-[#737373]">New to Netflix?</span>{" "}
-          <Link href="/sign-up">
-            <a className="text-white hover:underline transition-all">
+        {isLogin ? (
+          <div>
+            <span className="text-[#737373] cursor-text">New to Netflix?</span>{" "}
+            <span
+              className="text-white cursor-pointer hover:underline transition-all"
+              onClick={() => setIsLogin(false)}
+            >
               Sign up now.
-            </a>
-          </Link>
-        </div>
+            </span>
+          </div>
+        ) : (
+          <div>
+            <span className="text-[#737373] cursor-text">
+              Already have an account?
+            </span>{" "}
+            <span
+              className="text-white cursor-pointer hover:underline transition-all"
+              onClick={() => setIsLogin(true)}
+            >
+              Sign in now.
+            </span>
+          </div>
+        )}
       </form>
     </div>
   );
