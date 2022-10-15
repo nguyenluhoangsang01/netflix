@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { SubmitHandler } from "react-hook-form/dist/types";
 import Helmet from "../components/Helmet";
+import useDebounce from "../hooks/useDebounce";
 
 interface Inputs {
   email: string;
@@ -62,6 +63,7 @@ const Login = () => {
               type="email"
               placeholder="Email*"
               {...email}
+              onChange={useDebounce(email.onChange)}
             />
 
             <span role="alert" className="alertError">
@@ -77,6 +79,7 @@ const Login = () => {
               type="password"
               placeholder="Password*"
               {...password}
+              onChange={useDebounce(password.onChange)}
             />
 
             {errors.password?.type === "required" && (
