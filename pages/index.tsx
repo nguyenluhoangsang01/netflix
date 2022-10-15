@@ -1,5 +1,4 @@
 import axios from "axios";
-
 import Banner from "../components/Banner";
 import Header from "../components/Header";
 import Helmet from "../components/Helmet";
