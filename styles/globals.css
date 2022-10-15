@@ -38,4 +38,8 @@
   .inputError {
     @apply border-[#e50914] border-2;
   }
+
+  button {
+    @apply transition-all disabled:cursor-not-allowed disabled:bg-[#ccc] disabled:text-[#000];
+  }
 }

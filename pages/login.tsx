@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
-import { SubmitHandler } from "react-hook-form/dist/types";
+import { SubmitHandler, useForm } from "react-hook-form";
 import Helmet from "../components/Helmet";
-import useDebounce from "../hooks/useDebounce";
+import Input from "../components/Input";
+import Password from "../components/Password";
+import debounce from "../hooks/useDebounce";
 
-interface Inputs {
+interface FormValues {
   email: string;
   password: string;
 }
@@ -14,15 +15,17 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>();
+    formState: { errors, isSubmitting, isDirty, isValid },
+  } = useForm<FormValues>({ mode: "onChange" });
+  const onSubmit: SubmitHandler<FormValues> = (data) => console.log(data);
 
-  const email = register("email", { required: true, pattern: /^\S+@\S+$/i });
+  const email = register("email", {
+    required: true,
+    pattern: /^\S+@\S+$/i,
+  });
   const password = register("password", {
     required: true,
   });
-
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
   return (
     <div className="relative flex w-screen h-screen flex-col bg-black md:items-center md:justify-center md:bg-transparent">
@@ -57,42 +60,34 @@ const Login = () => {
         <h1 className="text-4xl font-semibold">Sign In</h1>
 
         <div className="space-y-4">
-          <label className="inline-block w-full">
-            <input
-              className={`input ${errors.email && "inputError"}`}
-              type="email"
-              placeholder="Email*"
-              {...email}
-              onChange={useDebounce(email.onChange)}
-            />
+          <Input
+            type="email"
+            {...email}
+            placeholder="Email"
+            className={`input ${errors.email ? "inputError" : ""}`}
+            onChange={debounce(email.onChange)}
+          />
+          <span role="alert" className="alertError">
+            {errors.email?.type === "required"
+              ? "Email is required"
+              : errors.email?.type === "pattern" && "Email is invalid"}
+          </span>
 
-            <span role="alert" className="alertError">
-              {errors.email?.type === "required"
-                ? "Email is required"
-                : errors.email?.type === "pattern" && "Email is invalid"}
-            </span>
-          </label>
-
-          <label className="inline-block w-full">
-            <input
-              className={`input ${errors.password && "inputError"}`}
-              type="password"
-              placeholder="Password*"
-              {...password}
-              onChange={useDebounce(password.onChange)}
-            />
-
-            {errors.password?.type === "required" && (
-              <span role="alert" className="alertError">
-                Password is required
-              </span>
-            )}
-          </label>
+          <Password
+            {...password}
+            placeholder="Password"
+            className={`input ${errors.password ? "inputError" : ""}`}
+            onChange={debounce(password.onChange)}
+          />
+          <span role="alert" className="alertError">
+            {errors.password?.type === "required" && "Password is required"}
+          </span>
         </div>
 
         <button
           type="submit"
           className="w-full rounded bg-[#e50914] py-3 font-semibold"
+          disabled={!isDirty || !isValid}
         >
           Sign In
         </button>
