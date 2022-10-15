@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { TbLoaderQuarter } from "react-icons/tb";
+import { FiLoader } from "react-icons/fi";
 import Helmet from "../components/Helmet";
 import Input from "../components/Input";
 import Password from "../components/Password";
@@ -93,7 +93,7 @@ const Login = () => {
           <div className="flex items-center justify-center space-x-2">
             <span>Sign In</span>
             {isSubmitting && (
-              <TbLoaderQuarter className="animate-spin text-2xl" />
+              <FiLoader className="animate-spin text-2xl" />
             )}
           </div>
         </button>
