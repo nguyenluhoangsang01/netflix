@@ -11,6 +11,21 @@
   header {
     @apply fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 transition-all lg:px-10;
   }
+
+  button {
+    @apply transition-all disabled:cursor-not-allowed disabled:bg-[#ccc] disabled:text-[#000];
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    cursor: ew-resize;
+    background: #fff;
+    box-shadow: -405px 0 0 400px #e50914;
+    border-radius: 50%;
+  }
 }
 
 /** Custom classNames */
@@ -39,7 +54,11 @@
     @apply border-[#e50914] border-2;
   }
 
-  button {
-    @apply transition-all disabled:cursor-not-allowed disabled:bg-[#ccc] disabled:text-[#000];
+  .controlIcons {
+    @apply min-w-[35px] min-h-[35px] md:min-w-[40px] md:min-h-[40px] flex items-center justify-center rounded-full bg-[#333] transition-all hover:bg-[#e50914] cursor-pointer p-1 md:p-2 text-white border-2 border-[#fff] hover:border-[#e50914] select-none;
+  }
+
+  .comma:not(:empty):not(:last-child):after {
+    content: ", ";
   }
 }

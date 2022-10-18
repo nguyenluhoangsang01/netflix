@@ -1,9 +1,11 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { BASE_URL_IMAGE } from "../constants/movie";
-import { Movie } from "../types";
 import { FaPlay } from "react-icons/fa";
 import { HiInformationCircle } from "react-icons/hi";
+import { useRecoilState } from "recoil";
+import { modalState, movieState } from "../atoms/modalAtom";
+import { BASE_URL_IMAGE } from "../constants";
+import { Movie } from "../types";
 
 interface Props {
   netflixOriginals: Movie[];
@@ -11,6 +13,8 @@ interface Props {
 
 const Banner = ({ netflixOriginals }: Props) => {
   const [movie, setMovie] = useState<Movie | null>(null);
+  const [_, setIsShowModal] = useRecoilState(modalState);
+  const [__, setCurrentMovie] = useRecoilState(movieState);
 
   useEffect(() => {
     setMovie(
@@ -18,20 +22,23 @@ const Banner = ({ netflixOriginals }: Props) => {
     );
   }, [netflixOriginals]);
 
+  if (!movie) return null;
+
   return (
     <div className="flex flex-col space-y-2 py-16 md:space-y-4 lg:h-[75vh] lg:justify-end lg:pb-12">
       <div className="absolute top-0 left-0 w-screen h-[95vh] -z-10">
         <Image
-          src={`${BASE_URL_IMAGE}/${movie?.backdrop_path || movie?.poster_path}`}
+          src={`${BASE_URL_IMAGE}/${
+            movie?.backdrop_path || movie?.poster_path
+          }`}
           layout="fill"
-          unoptimized
           alt={`Banner of ${movie?.title}`}
           objectFit="cover"
           priority
         />
       </div>
 
-      <h1 className="text-2xl md:text-4xl lg:text-7xl">
+      <h1 className="text-2xl md:text-4xl lg:text-7xl text-white">
         {movie?.title || movie?.original_title}
       </h1>
       <p
@@ -47,7 +54,14 @@ const Banner = ({ netflixOriginals }: Props) => {
           <span>Play</span>
         </button>
 
-        <button type="button" className="bannerButton bg-[gray]/70">
+        <button
+          type="button"
+          className="bannerButton bg-[gray]/70"
+          onClick={() => {
+            setCurrentMovie(movie);
+            setIsShowModal(true);
+          }}
+        >
           <span>More Info</span>
           <HiInformationCircle className="w-4 h-4 md:w-5 md:h-5" />
         </button>

@@ -1,7 +1,10 @@
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { modalState } from "../atoms/modalAtom";
 import Banner from "../components/Banner";
 import Header from "../components/Header";
 import Helmet from "../components/Helmet";
+import Modal from "../components/Modal";
 import Row from "../components/Row";
 import { Movie } from "../types";
 import requests from "../utils/requests";
@@ -27,6 +30,8 @@ const Home = ({
   romanceMovies,
   documentaries,
 }: Props) => {
+  const isShowModal = useRecoilValue(modalState);
+
   return (
     <div className="relative h-screen bg-gradient-to-b lg:h-[140vh]">
       <Helmet title="Home" />
@@ -46,6 +51,8 @@ const Home = ({
           <Row title="Documentaries" movies={documentaries} />
         </section>
       </main>
+
+      {isShowModal && <Modal />}
     </div>
   );
 };

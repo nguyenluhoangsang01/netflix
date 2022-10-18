@@ -1,20 +1,21 @@
 import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-  signOut,
-  User,
+	createUserWithEmailAndPassword,
+	onAuthStateChanged,
+	sendPasswordResetEmail,
+	signInWithEmailAndPassword,
+	signOut,
+	User
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useRecoilState } from "recoil";
+import { loginState } from "../atoms/modalAtom";
 import Loading from "../components/Loading";
 import { auth } from "../firebase";
 
 interface IAuth {
   user: User | null;
   loading: Boolean;
-  error: String | null;
   signUp: (email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   reset: (email: string) => Promise<void>;
@@ -28,7 +29,6 @@ interface AuthProviderProps {
 const AuthContext = createContext<IAuth>({
   user: null,
   loading: true,
-  error: null,
   signUp: async () => {},
   signIn: async () => {},
   reset: async () => {},
@@ -37,9 +37,11 @@ const AuthContext = createContext<IAuth>({
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
+
+  const [_, setLogin] = useRecoilState(loginState);
+
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<Boolean>(true);
-  const [error, setError] = useState<String | null>(null);
   const [initialLoading, setInitialLoading] = useState<Boolean>(true);
 
   // Persist user session
@@ -68,6 +70,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       .then((userCredential) => {
         const user = userCredential.user;
         setUser(user);
+
+        setLogin("signIn");
 
         setLoading(false);
       })
@@ -104,7 +108,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       .then(() => {
         alert("Password reset email sent!");
 
-        router.push("/login");
+        setLogin("signIn");
 
         setLoading(false);
       })
@@ -139,13 +143,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     () => ({
       user,
       loading,
-      error,
       signUp,
       signIn,
       reset,
       logout,
     }),
-    [user, loading, error]
+    [user, loading]
   );
 
   return (

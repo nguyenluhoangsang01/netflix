@@ -1,4 +1,4 @@
-const slugify = (string: string) =>
+const slugify = (string?: string) =>
   string
     ?.toLowerCase()
     .replace(/\s+/g, "-")

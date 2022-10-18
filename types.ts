@@ -15,15 +15,52 @@ export interface Movie {
   backdrop_path: string;
   genre_ids: number[];
   id: number;
-  media_type: MediaType;
   original_language: Language;
-  original_title: string;
   overview: string;
-  popularity: number;
   poster_path: string;
   release_date: string;
-  title: string;
-  video: boolean;
   vote_average: number;
   vote_count: number;
+  title?: string;
+  original_title?: string;
+  name?: string;
+  original_name?: string;
+  first_air_date?: string;
+  media_type: MediaType;
+  origin_country?: string[];
+  popularity: number;
+  release_dates?: string;
+  video?: boolean;
+}
+
+enum VideoTypes {
+  Trailer = "Trailer",
+  Teaser = "Teaser",
+  Clip = "Clip",
+  Bloopers = "Bloopers",
+  Featurette = "Featurette",
+  BehindTheScenes = "Behind the Scenes",
+}
+
+export interface Video {
+  id: string;
+  iso_639_1: string;
+  iso_3166_1: string;
+  key: string;
+  name: string;
+  official: boolean;
+  published_at: string;
+  site: string;
+  size: number;
+  type: VideoTypes;
+}
+
+export interface Genre {
+  id: number;
+  name: string;
+}
+
+export interface FormValues {
+  email: string;
+  password: string;
 }
