@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { FaPlay } from "react-icons/fa";
 import { HiInformationCircle } from "react-icons/hi";
 import { useRecoilState } from "recoil";
-import { modalState, movieState } from "../atoms/modalAtom";
+import { modalState } from "../atoms/modalAtom";
+import { movieState } from "../atoms/movieAtom";
 import { BASE_URL_IMAGE } from "../constants";
 import { Movie } from "../types";
 

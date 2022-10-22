@@ -1,11 +1,14 @@
 import axios from "axios";
 import { useRecoilValue } from "recoil";
 import { modalState } from "../atoms/modalAtom";
+import { isPlanState } from "../atoms/planAtom";
 import Banner from "../components/Banner";
 import Header from "../components/Header";
 import Helmet from "../components/Helmet";
 import Modal from "../components/Modal";
+import Plans from "../components/Plans";
 import Row from "../components/Row";
+import { LOCAL_STORAGE_PLAN_KEY } from "../constants";
 import { Movie } from "../types";
 import requests from "../utils/requests";
 
@@ -31,6 +34,10 @@ const Home = ({
   documentaries,
 }: Props) => {
   const isShowModal = useRecoilValue(modalState);
+  const isPlan = useRecoilValue(isPlanState);
+  const check = !isPlan && !localStorage.getItem(LOCAL_STORAGE_PLAN_KEY);
+
+  if (check) return <Plans />;
 
   return (
     <div className="relative h-screen bg-gradient-to-b lg:h-[140vh]">

@@ -1,23 +1,27 @@
 import {
-	createUserWithEmailAndPassword,
-	onAuthStateChanged,
-	sendPasswordResetEmail,
-	signInWithEmailAndPassword,
-	signOut,
-	User
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  User,
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useRecoilState } from "recoil";
-import { loginState } from "../atoms/modalAtom";
+import { loginState } from "../atoms/loginAtom";
 import Loading from "../components/Loading";
-import { auth } from "../firebase";
+import { auth, facebook, github, google } from "../firebase";
 
 interface IAuth {
   user: User | null;
   loading: Boolean;
   signUp: (email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
+  signInWithFacebook: () => Promise<void>;
+  signInWithGithub: () => Promise<void>;
   reset: (email: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -31,6 +35,9 @@ const AuthContext = createContext<IAuth>({
   loading: true,
   signUp: async () => {},
   signIn: async () => {},
+  signInWithGoogle: async () => {},
+  signInWithFacebook: async () => {},
+  signInWithGithub: async () => {},
   reset: async () => {},
   logout: async () => {},
 });
@@ -139,12 +146,70 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       .finally(() => setLoading(false));
   };
 
+  const signInWithGoogle = async () => {
+    await signInWithPopup(auth, google)
+      .then((result) => {
+        const user = result.user;
+        setUser(user);
+
+        router.push("/");
+
+        setLoading(false);
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        alert(errorMessage);
+
+        setLoading(false);
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const signInWithFacebook = async () => {
+    await signInWithPopup(auth, facebook)
+      .then((result) => {
+        const user = result.user;
+        setUser(user);
+
+        router.push("/");
+
+        setLoading(false);
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        alert(errorMessage);
+
+        setLoading(false);
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const signInWithGithub = async () => {
+    await signInWithPopup(auth, github)
+      .then((result) => {
+        const user = result.user;
+        setUser(user);
+
+        router.push("/");
+
+        setLoading(false);
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        alert(errorMessage);
+      })
+      .finally(() => setLoading(false));
+  };
+
   const memoedValue = useMemo(
     () => ({
       user,
       loading,
       signUp,
       signIn,
+      signInWithGoogle,
+      signInWithFacebook,
+      signInWithGithub,
       reset,
       logout,
     }),

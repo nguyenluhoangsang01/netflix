@@ -64,3 +64,14 @@ export interface FormValues {
   email: string;
   password: string;
 }
+
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
+  videoQuality: string;
+  resolution: string;
+  portability: boolean;
+  ads: boolean;
+  ultraHD: boolean;
+}

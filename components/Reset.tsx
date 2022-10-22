@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FiLoader } from "react-icons/fi";
 import { useRecoilState } from "recoil";
-import { loginState } from "../atoms/modalAtom";
+import { loginState } from "../atoms/loginAtom";
 import useAuth from "../hooks/useAuth";
 import debounce from "../hooks/useDebounce";
 import { FormValues } from "../types";

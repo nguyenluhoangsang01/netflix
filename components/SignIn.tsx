@@ -1,7 +1,9 @@
 import { SubmitHandler, useForm } from "react-hook-form";
+import { FaFacebookF, FaGithub } from "react-icons/fa";
 import { FiLoader } from "react-icons/fi";
 import { useRecoilState } from "recoil";
-import { loginState } from "../atoms/modalAtom";
+import Google from "../assets/icons/Google";
+import { loginState } from "../atoms/loginAtom";
 import useAuth from "../hooks/useAuth";
 import debounce from "../hooks/useDebounce";
 import { FormValues } from "../types";
@@ -10,6 +12,28 @@ import Input from "./Input";
 const SignIn = () => {
   const { signIn } = useAuth();
   const [_, setLogin] = useRecoilState(loginState);
+  const { signInWithGoogle, signInWithFacebook, signInWithGithub } = useAuth();
+
+  const signInMethods = [
+    {
+      id: 1,
+      icon: <Google />,
+      name: "Google",
+      func: signInWithGoogle,
+    },
+    {
+      id: 2,
+      icon: <FaGithub className="text-[#fff]" />,
+      name: "Github",
+      func: signInWithGithub,
+    },
+    {
+      id: 3,
+      icon: <FaFacebookF className="text-[#3578E5]" />,
+      name: "Facebook",
+      func: signInWithFacebook,
+    },
+  ];
 
   const {
     register,
@@ -72,6 +96,21 @@ const SignIn = () => {
           {isSubmitting && <FiLoader className="animate-spin text-2xl" />}
         </div>
       </button>
+
+      <div className="flex flex-col gap-4 sm:flex-row">
+        {signInMethods.map((signInMethod) => (
+          <div
+            key={signInMethod.id}
+            className={`cursor-pointer flex items-center justify-center space-x-2 py-2 rounded-sm hover:opacity-80 transition w-full`}
+            onClick={signInMethod.func}
+          >
+            <span className="w-5 h-5">{signInMethod.icon}</span>
+            <span className="font-semibold text-white">
+              {signInMethod.name}
+            </span>
+          </div>
+        ))}
+      </div>
 
       <p>
         <span className="text-[#737373] cursor-text">New to Netflix?</span>{" "}

@@ -1,7 +1,9 @@
 import { Genre } from "./../types";
+
 export const BASE_URL_IMAGE = "https://image.tmdb.org/t/p/original";
 export const BASE_URL_IMAGE_W500 = "https://image.tmdb.org/t/p/w500";
 export const BASE_URL_YOUTUBE = "https://www.youtube.com/watch";
+export const LOCAL_STORAGE_PLAN_KEY = "movie-plan";
 
 export const genres: Genre[] = [
   { id: 28, name: "Action" },

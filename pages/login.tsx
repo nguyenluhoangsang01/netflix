@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRecoilValue } from "recoil";
-import { loginState } from "../atoms/modalAtom";
+import { loginState } from "../atoms/loginAtom";
 import Helmet from "../components/Helmet";
 import Reset from "../components/Reset";
 import SignIn from "../components/SignIn";
