@@ -1,9 +1,10 @@
-import { Genre } from "./../types";
+import { Genre, Product } from "./../types";
 
 export const BASE_URL_IMAGE = "https://image.tmdb.org/t/p/original";
 export const BASE_URL_IMAGE_W500 = "https://image.tmdb.org/t/p/w500";
 export const BASE_URL_YOUTUBE = "https://www.youtube.com/watch";
 export const LOCAL_STORAGE_PLAN_KEY = "movie-plan";
+export const LOCAL_STORAGE_SUBSCRIBE_TIME_KEY = "movie-subscribe-time";
 
 export const genres: Genre[] = [
   { id: 28, name: "Action" },
@@ -25,4 +26,62 @@ export const genres: Genre[] = [
   { id: 10770, name: "TV Movie" },
   { id: 10752, name: "War" },
   { id: 37, name: "Western" },
+];
+
+export const products: Product[] = [
+  {
+    id: 1,
+    name: "Basic",
+    price: 7.99,
+    videoQuality: "Good",
+    resolution: "480p",
+    portability: false,
+    ads: true,
+    ultraHD: false,
+  },
+  {
+    id: 2,
+    name: "Standard",
+    price: 10.99,
+    videoQuality: "Better",
+    resolution: "1080p",
+    portability: true,
+    ads: true,
+    ultraHD: false,
+  },
+  {
+    id: 3,
+    name: "Premium",
+    price: 13.99,
+    videoQuality: "Best",
+    resolution: "4K+HDR",
+    portability: true,
+    ads: false,
+    ultraHD: true,
+  },
+];
+
+export const days = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
+export const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];

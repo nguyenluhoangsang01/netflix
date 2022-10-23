@@ -91,4 +91,23 @@
     @apply opacity-40 transition;
   }
   /*  */
+
+  .planInfo {
+    @apply w-full md:w-2/5 mx-auto;
+  }
+  .planInfo > div > div > div > span {
+    @apply text-[#e50914] mb-2 block;
+  }
+  .planInfo > div > div > p {
+    @apply md:flex md:gap-4 md:items-center md:justify-end;
+  }
+  .planInfo > div > div > p > span {
+    @apply text-blue-500 text-xs cursor-pointer transition hover:underline hover:text-blue-700 text-end block italic mt-4;
+  }
+  .planInfo > div > div > p > button {
+    @apply text-red-500 text-xs underline hover:text-red-700 mt-4 w-full md:w-auto italic;
+  }
+  .planInfo input {
+    @apply bg-[#ccc] p-2 rounded text-[#141414] border-0 outline-none w-full;
+  }
 }

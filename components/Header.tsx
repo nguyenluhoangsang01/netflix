@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { AiFillBell, AiOutlineSearch } from "react-icons/ai";
 import { RiAccountCircleFill } from "react-icons/ri";
@@ -13,6 +14,8 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const isPlan = useRecoilValue(isPlanState);
   const check = !isPlan && !localStorage.getItem(LOCAL_STORAGE_PLAN_KEY);
+
+  const { pathname } = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,7 +48,7 @@ const Header = () => {
           </a>
         </Link>
 
-        {!check && (
+        {!check && pathname !== "/account" && (
           <nav>
             <ul className="hidden space-x-4 md:flex">
               <li className="headerLink">
@@ -79,7 +82,7 @@ const Header = () => {
       </div>
 
       <div className="flex items-center space-x-4 text-sm font-light">
-        {!check && (
+        {!check && pathname !== "/account" && (
           <>
             <AiOutlineSearch className="icon hidden sm:inline" title="Search" />
             <AiFillBell className="icon" title="Notifications" />
@@ -92,6 +95,14 @@ const Header = () => {
         )}
 
         {check && (
+          <Link href="/account">
+            <a title="Account">
+              <RiAccountCircleFill className="icon" />
+            </a>
+          </Link>
+        )}
+
+        {(check || pathname === "/account") && (
           <button
             className="text-white font-medium text-lg hover:underline transition"
             onClick={logout}

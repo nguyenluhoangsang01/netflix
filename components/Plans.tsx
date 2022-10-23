@@ -1,8 +1,12 @@
 import { AiOutlineCheck } from "react-icons/ai";
 import { useRecoilState } from "recoil";
 import { isPlanState, planState } from "../atoms/planAtom";
-import { LOCAL_STORAGE_PLAN_KEY } from "../constants";
-import { Product } from "../types";
+import {
+  LOCAL_STORAGE_PLAN_KEY,
+  LOCAL_STORAGE_SUBSCRIBE_TIME_KEY,
+  products,
+} from "../constants";
+import getTime from "../utils/getCurrentTime";
 import Header from "./Header";
 import Helmet from "./Helmet";
 import Table from "./Table";
@@ -15,39 +19,6 @@ const benefits = [
   "Unlimited movies, TV shows, and more.",
 ];
 
-const products: Product[] = [
-  {
-    id: 1,
-    name: "Basic",
-    price: 7.99,
-    videoQuality: "Good",
-    resolution: "480p",
-    portability: false,
-    ads: true,
-    ultraHD: false,
-  },
-  {
-    id: 2,
-    name: "Standard",
-    price: 10.99,
-    videoQuality: "Better",
-    resolution: "1080p",
-    portability: true,
-    ads: true,
-    ultraHD: false,
-  },
-  {
-    id: 3,
-    name: "Premium",
-    price: 13.99,
-    videoQuality: "Best",
-    resolution: "4K+HDR",
-    portability: true,
-    ads: false,
-    ultraHD: true,
-  },
-];
-
 const Plans = () => {
   const [plan, setPlan] = useRecoilState(planState);
   const [_, setIsPlan] = useRecoilState(isPlanState);
@@ -56,6 +27,7 @@ const Plans = () => {
     setIsPlan(true);
 
     localStorage.setItem(LOCAL_STORAGE_PLAN_KEY, plan);
+    localStorage.setItem(LOCAL_STORAGE_SUBSCRIBE_TIME_KEY, getTime());
   };
 
   return (
