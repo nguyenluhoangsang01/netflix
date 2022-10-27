@@ -1,8 +1,13 @@
 import axios from "axios";
+import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import {
+  AiOutlineCheck,
+  AiOutlineClose,
   AiOutlineCloseCircle,
   AiOutlineLike,
+  AiOutlineLoading3Quarters,
   AiOutlinePlus,
 } from "react-icons/ai";
 import {
@@ -18,6 +23,9 @@ import screenfull from "screenfull";
 import { modalState } from "../atoms/modalAtom";
 import { movieState } from "../atoms/movieAtom";
 import { BASE_URL_YOUTUBE, genres } from "../constants";
+import { db } from "../firebase";
+import useAuth from "../hooks/useAuth";
+import useList from "../hooks/useList";
 import { Video } from "../types";
 import formatDate from "../utils/formatDate";
 import { API_KEY, BASE_URL } from "../utils/requests";
@@ -34,6 +42,14 @@ const ModalFC = () => {
     isFullscreen: false,
   });
   const [isShowControl, setIsShowControl] = useState<Boolean>(false);
+  const [isAddedToList, setIsAddedToList] = useState<Boolean>(false);
+  const { user } = useAuth();
+  const list = useList(user?.uid);
+  const [loading, setLoading] = useState<Boolean>(false);
+
+  useEffect(() => {
+    setIsAddedToList(list?.some((item) => item.id === movie?.id.toString()));
+  }, [list, movie]);
 
   useEffect(() => {
     (async () => {
@@ -155,11 +171,56 @@ const ModalFC = () => {
     }
   };
 
+  const handleAddToList = async (title: string) => {
+    setLoading(true);
+
+    try {
+      await setDoc(
+        doc(db, "users", user!.uid, "myList", movie?.id.toString()),
+        {
+          ...movie,
+        }
+      );
+      toast(`${title} has been added to your list!`, {
+        icon: <AiOutlineCheck className="text-[green]" />,
+        duration: 5000,
+      });
+
+      setLoading(false);
+      setIsAddedToList(true);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  const handleRemoveFromList = async (title: string) => {
+    setLoading(true);
+    try {
+      await deleteDoc(
+        doc(db, "users", user!.uid, "myList", movie?.id.toString())
+      );
+
+      toast(`${title} has been removed from your list!`, {
+        icon: <AiOutlineClose className="text-[red]" />,
+        duration: 5000,
+      });
+
+      setIsAddedToList(false);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center px-5 md:px-10"
       onClick={handleClickOutsideModal}
     >
+      <Toaster />
+
       <button
         onClick={() => setIsShowModal(false)}
         className="absolute top-1 right-1 md:top-4 md:right-4"
@@ -267,7 +328,35 @@ const ModalFC = () => {
             </h1>
 
             <div className="flex items-center gap-4">
-              <AiOutlinePlus className="controlIcons" />
+              {loading ? (
+                <div className="animate-spin">
+                  <AiOutlineLoading3Quarters />
+                </div>
+              ) : isAddedToList ? (
+                <AiOutlineCheck
+                  className="controlIcons bg-[green] transition"
+                  onClick={() =>
+                    handleRemoveFromList(
+                      movie?.title ||
+                        movie?.name ||
+                        movie?.original_title ||
+                        movie?.original_name
+                    )
+                  }
+                />
+              ) : (
+                <AiOutlinePlus
+                  className="controlIcons"
+                  onClick={() =>
+                    handleAddToList(
+                      movie?.title ||
+                        movie?.name ||
+                        movie?.original_title ||
+                        movie?.original_name
+                    )
+                  }
+                />
+              )}
 
               <AiOutlineLike className="controlIcons" />
             </div>

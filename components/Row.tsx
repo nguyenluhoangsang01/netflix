@@ -1,3 +1,4 @@
+import { DocumentData } from "firebase/firestore";
 import { useRef, useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { Movie } from "../types";
@@ -5,7 +6,7 @@ import Thumbnail from "./Thumbnail";
 
 interface Props {
   title: string;
-  movies: Movie[];
+  movies: Movie[] | DocumentData[];
 }
 
 const Row = ({ title, movies }: Props) => {

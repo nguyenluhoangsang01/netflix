@@ -55,7 +55,7 @@
   }
 
   .controlIcons {
-    @apply min-w-[35px] min-h-[35px] md:min-w-[40px] md:min-h-[40px] flex items-center justify-center rounded-full bg-[#333] transition-all hover:bg-[#e50914] cursor-pointer p-1 md:p-2 text-white border-2 border-[#fff] hover:border-[#e50914] select-none;
+    @apply min-w-[35px] min-h-[35px] md:min-w-[40px] md:min-h-[40px] flex items-center justify-center rounded-full bg-[#333] transition-all cursor-pointer p-1 md:p-2 text-white border-2 border-[#fff] hover:border-[#e50914] select-none;
   }
 
   .comma:not(:empty):not(:last-child):after {

@@ -1,10 +1,11 @@
 import {
-	createUserWithEmailAndPassword,
-	onAuthStateChanged,
-	sendPasswordResetEmail,
-	signInWithEmailAndPassword,
-	signInWithPopup,
-	signOut
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  User,
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
@@ -14,6 +15,7 @@ import Loading from "../components/Loading";
 import { auth, facebook, github, google } from "../firebase";
 
 interface IAuth {
+  user: User | null;
   loading: Boolean;
   signUp: (email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
@@ -29,6 +31,7 @@ interface AuthProviderProps {
 }
 
 const AuthContext = createContext<IAuth>({
+  user: null,
   loading: true,
   signUp: async () => {},
   signIn: async () => {},
@@ -42,6 +45,7 @@ const AuthContext = createContext<IAuth>({
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
 
+  const [user, setUser] = useState<User | null>(null);
   const [_, setLogin] = useRecoilState(loginState);
 
   const [loading, setLoading] = useState<Boolean>(true);
@@ -53,10 +57,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       onAuthStateChanged(auth, (user) => {
         if (user) {
           setLoading(false);
+          setUser(user);
         } else {
           router.push("/login");
 
           setLoading(false);
+          setUser(null);
         }
 
         setInitialLoading(false);
@@ -68,6 +74,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        setUser(user);
 
         setLogin("signIn");
 
@@ -86,6 +93,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     await signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        setUser(user);
 
         router.push("/");
 
@@ -123,6 +131,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       .then(() => {
         router.push("/login");
 
+        setUser(null);
+
         setLoading(false);
       })
       .catch((error) => {
@@ -138,6 +148,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     await signInWithPopup(auth, google)
       .then((result) => {
         const user = result.user;
+        setUser(user);
 
         router.push("/");
 
@@ -156,6 +167,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     await signInWithPopup(auth, facebook)
       .then((result) => {
         const user = result.user;
+        setUser(user);
 
         router.push("/");
 
@@ -174,6 +186,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     await signInWithPopup(auth, github)
       .then((result) => {
         const user = result.user;
+        setUser(user);
 
         router.push("/");
 
@@ -188,6 +201,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const memoedValue = useMemo(
     () => ({
+      user,
       loading,
       signUp,
       signIn,

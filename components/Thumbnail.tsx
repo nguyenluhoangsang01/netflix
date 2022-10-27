@@ -1,3 +1,4 @@
+import { DocumentData } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import { BASE_URL_IMAGE_W500 } from "../constants";
@@ -5,7 +6,7 @@ import { Movie } from "../types";
 import slugify from "../utils/slugify";
 
 interface Props {
-  movie: Movie;
+  movie: Movie | DocumentData;
 }
 
 const Thumbnail = ({ movie }: Props) => {
@@ -27,9 +28,7 @@ const Thumbnail = ({ movie }: Props) => {
           }`}
         >
           <a>
-            <div
-              className="relative min-w-[180px] h-36"
-            >
+            <div className="relative min-w-[180px] h-36">
               <Image
                 src={`${BASE_URL_IMAGE_W500}/${
                   movie.backdrop_path || movie.poster_path

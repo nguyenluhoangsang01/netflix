@@ -9,6 +9,8 @@ import Modal from "../components/Modal";
 import Plans from "../components/Plans";
 import Row from "../components/Row";
 import { LOCAL_STORAGE_PLAN_KEY } from "../constants";
+import useAuth from "../hooks/useAuth";
+import useList from "../hooks/useList";
 import { Movie } from "../types";
 import requests from "../utils/requests";
 
@@ -36,6 +38,8 @@ const Home = ({
   const isShowModal = useRecoilValue(modalState);
   const isPlan = useRecoilValue(isPlanState);
   const check = !isPlan && !localStorage.getItem(LOCAL_STORAGE_PLAN_KEY);
+  const { user } = useAuth();
+  const list = useList(user?.uid);
 
   if (check) return <Plans />;
 
@@ -49,6 +53,7 @@ const Home = ({
         <Banner netflixOriginals={netflixOriginals} />
 
         <section className="space-y-14 md:space-y-32">
+          {list.length > 0 && <Row title="My List" movies={list} />}
           <Row title="Trending Now" movies={trending} />
           <Row title="Top Rated" movies={topRated} />
           <Row title="Action Thrillers" movies={actionMovies} />
